@@ -12,8 +12,8 @@ class Database:
             Update variable determines SQL statement type"""
         try:
             conn = psycopg2.connect(
-                user="jeremyjohnson-mini",
-                password="!Bigdog24",
+                user="",
+                password="",
                 database="air_res_prod_db",
                 port="5432",
             )
