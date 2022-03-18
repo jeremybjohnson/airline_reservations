@@ -6,15 +6,13 @@ from src.classes.reservation import Reservation
 
 
 class AvailFlights(tk.Frame):
-    def __init__(self, parent, controller, show_home, show_search, show_res, show_rt_search, return_flights):
+    def __init__(self, parent, controller, show_home, show_search, show_res):
         super().__init__(parent)
         
         self.controller = controller
         self.show_home = show_home
         self.show_search = show_search
         self.show_res = show_res
-        self.show_rt_search = show_rt_search
-        self.return_flights = return_flights
         
         """Header Section"""
         header_container = ttk.Frame(self, height=50)
@@ -49,7 +47,6 @@ class AvailFlights(tk.Frame):
         )
         self.home_button.grid(row=0, column=0, padx=10, pady=10, sticky='W')
         self.home_button.bind('<Return>', self.home_handler)
-        self.home_button.bind('<Tab>', self.tab_order)
                 
         self.reserve_button = ttk.Button(
             button_container,
@@ -60,31 +57,22 @@ class AvailFlights(tk.Frame):
         )
         self.reserve_button.grid(row=0, column=1, padx=10, pady=10, sticky='W')
         self.reserve_button.bind('<Return>', self.reserve_handler)
+        self.reserve_button.bind('<Tab>', self.tab_order)
         
         self.search_button = ttk.Button(
             button_container,
-            text='One Way Search',
+            text='Search Flights',
             command=self.search,
             width=15,
             style='CustomButton.TButton',
         )
         self.search_button.grid(row=0, column=2, padx=10, pady=10, sticky='W')
         self.search_button.bind('<Return>', self.search_handler)
-        
-        self.search_rt_button = ttk.Button(
-            button_container,
-            text='Round Trip Search',
-            command=self.show_rt_search,
-            width=15,
-            style='CustomButton.TButton',
-        )
-        self.search_rt_button.grid(row=0, column=3, padx=10, pady=10, sticky='W')
-        self.search_rt_button.bind('<Return>', self.search_rt_handler)
-        self.search_rt_button.bind('<Tab>', self.tab_order_rev)
+        self.search_button.bind('<Tab>', self.tab_order_rev)
     
     
     def postupdate(self):
-        self.home_button.focus()
+        self.reserve_button.focus()
         self.build_tree()
         
         
@@ -100,18 +88,14 @@ class AvailFlights(tk.Frame):
         self.reserve_flight()
         
         
-    def search_rt_handler(self, event):
-        self.show_rt_search()
-        
-        
     def tab_order(self, event):
-        widget = [self.home_button, self.reserve_button, self.search_button, self.search_rt_button]
+        widget = [self.reserve_button, self.home_button, self.search_button]
         for w in widget:
             w.lift()
         
         
     def tab_order_rev(self, event):
-        widget = [self.search_rt_button, self.search_button, self.reserve_button, self.home_button]
+        widget = [self.search_button, self.home_button, self.reserve_button]
         for w in widget:
             w.lift()
         
@@ -120,7 +104,10 @@ class AvailFlights(tk.Frame):
         # Treeview scrollbar
         self.tree_scroll = ttk.Scrollbar(self.tree_container)
         self.tree_scroll.grid(row=0, column=1, sticky='NS')
+        
         self.tree = ttk.Treeview(self.tree_container, yscrollcommand=self.tree_scroll.set)
+        
+        # configure scrolllbar
         self.tree_scroll.config(command=self.tree.yview) 
         
         self.tree['columns'] = ('flight_id', 'airline', 'flight_number', 
@@ -174,23 +161,14 @@ class AvailFlights(tk.Frame):
     
     def home(self):
         self.controller.flight.avail_flights = []
-        self.controller.flight.return_flights = []
         self.build_tree()
         self.show_home()
         
         
     def search(self):
         self.controller.flight.avail_flights = []
-        self.controller.flight.return_flights = []
         self.build_tree()
         self.show_search()
-        
-        
-    def search_rt(self):
-        self.controller.flight.avail_flights = []
-        self.controller.flight.return_flights = []
-        self.build_tree()
-        self.show_rt_search()
 
     
     def reserve_flight(self):
@@ -201,16 +179,10 @@ class AvailFlights(tk.Frame):
             if self.controller.res.set_res(flight_id, username, seats_requested) == False:
                 messagebox.showerror(f'Database Error', 'You already have a reservation for that flight. \nYou have to cancel your reservation and book a new one')
             else:
-                if self.controller.search.return_date == '':
-                    self.controller.res.set_res(flight_id, username, seats_requested)
-                    self.controller.res.set_res_db()
-                    messagebox.showinfo("Reservation", 'Your reservation has been created')
-                    self.show_res()
-                else:
-                    self.controller.res.set_res(flight_id, username, seats_requested)
-                    self.controller.res.set_res_db()
-                    messagebox.showinfo("Reservation", 'Your reservation has been created')
-                    self.return_flights()
+                self.controller.res.set_res(flight_id, username, seats_requested)
+                self.controller.res.set_res_db()
+                messagebox.showinfo("Reservation", 'Your reservation has been created')
+                self.show_res()
         except IndexError:
             messagebox.showerror(f'No Flight Selected', 'You must select a flight')
                 

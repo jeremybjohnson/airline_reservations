@@ -8,7 +8,7 @@ from src.classes.search import Search
 
 class SearchFlights(tk.Frame):
     def __init__(self, parent, controller, show_home, 
-                 show_login, show_avail_flights):
+                 show_login, show_avail_flights, show_search):
         super().__init__(parent)
         
         self.controller = controller
@@ -16,10 +16,10 @@ class SearchFlights(tk.Frame):
         self.show_avail_flights = show_avail_flights
         self.show_home = show_home
         
-        self.depart_code = tk.StringVar()
-        self.dest_code = tk.StringVar()
+        self.depart_code = tk.StringVar(value='iah')
+        self.dest_code = tk.StringVar(value='pdx')
         self.depart_date = tk.StringVar() 
-        self.seats_requested = tk.IntVar()
+        self.seats_requested = tk.IntVar(value=1)
         
         """Header Section"""
         header_container = ttk.Frame(self, height=80)
@@ -181,8 +181,7 @@ class SearchFlights(tk.Frame):
                 (self.depart_entry.get()).upper(),
                 (self.dest_entry.get()).upper(),
                 self.depart_date.get(),  
-                self.seats_requested.get(),
-                self.controller.search.return_date
+                self.seats_requested.get()
             )                   
                 
             self.controller.flight.avail_flights = self.controller.search.get_flights_db()     
