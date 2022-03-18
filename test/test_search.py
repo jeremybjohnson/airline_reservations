@@ -67,21 +67,3 @@ def test_get_flights_db_2_flight_available(global_user1):
                      (44, 'American Airlines', 'AA2345', 'SFO', 'IAH', '02/22/2022', '14:00', '$300.00', 100)]
     flights = search.get_flights_db()
     assert flights == avail_flights
-
-
-def test_get_flights_return_db_no_return_flight(global_user1):
-    """Data entered is not in the database"""
-    user = global_user1
-    search = Search()
-    search.set_search(user.username, 'IAH', 'SFO', '2/16/2022', 2, '2/20/2022')
-    flights = search.get_return_flights_db()
-    assert flights == False
-    
-    
-def test_get_flights_return_db_return_flight_available(global_user1):
-    user = global_user1
-    search = Search()
-    search.set_search(user.username, 'IAH', 'LAX', '2/16/2022', 2, '2/22/2022')
-    flights = search.get_return_flights_db()
-    return_flight = [(42, 'United Airlines', 'UA3456', 'LAX', 'IAH', '02/22/2022', '14:00', '$400.00', 100)]
-    assert flights == return_flight

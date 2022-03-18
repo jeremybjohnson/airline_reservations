@@ -6,7 +6,7 @@ from src.classes.reservation import Reservation
 
 
 class ShowRes(tk.Frame):
-    def __init__(self, parent, controller, show_home, show_search, show_login, show_rt_search):
+    def __init__(self, parent, controller, show_home, show_search, show_login):
         super().__init__(parent)
         tk.Frame.__init__(self, parent)
         
@@ -17,7 +17,6 @@ class ShowRes(tk.Frame):
         self.show_home = show_home
         self.show_search = show_search
         self.show_login = show_login
-        self.show_rt_search = show_rt_search
         
         """Header Section"""
         header_container = ttk.Frame(self, height=80)
@@ -66,23 +65,13 @@ class ShowRes(tk.Frame):
         
         self.search_button = ttk.Button(
             button_container,
-            text='One Way Search',
+            text='Search Flights',
             command=show_search,
             width=15,
             style = 'CustomButton.TButton',
         )
         self.search_button.grid(row=0, column=2, padx=10, pady=10, sticky='W')
         self.search_button.bind('<Return>', self.search_handler)
-        
-        self.search_rt_button = ttk.Button(
-            button_container,
-            text='Round Trip Search',
-            command=self.show_rt_search,
-            width=15,
-            style='CustomButton.TButton',
-        )
-        self.search_rt_button.grid(row=0, column=3, padx=10, pady=10, sticky='W')
-        self.search_rt_button.bind('<Return>', self.search_rt_handler)
 
         self.login_button = ttk.Button(
             button_container,
@@ -91,7 +80,7 @@ class ShowRes(tk.Frame):
             width=15,
             style = 'CustomButton.TButton',
         )
-        self.login_button.grid(row=0, column=4, padx=10, pady=10, sticky='W')
+        self.login_button.grid(row=0, column=3, padx=10, pady=10, sticky='W')
         self.login_button.bind('<Return>', self.login_handler)
         self.login_button.bind('<Tab>', self.tab_order_rev)
         
@@ -116,19 +105,14 @@ class ShowRes(tk.Frame):
         self.show_login()
         
         
-    def search_rt_handler(self, event):
-        self.show_rt_search()
-        
-        
     def tab_order(self, event):
-        widgets = [self.home_button, self.cancel_button, self.search_button, 
-                   self.search_rt_button, self.login_button]
+        widgets = [self.home_button, self.cancel_button, self.search_button, self.login_button]
         for w in widgets:
             w.lift()
             
             
     def tab_order_rev(self, event):
-        widgets = [self.login_button, self.search_rt_button, self.search_button, self.cancel_button, self.home_button]
+        widgets = [self.login_button, self.search_button, self.cancel_button, self.home_button]
         for w in widgets:
             w.lift()
         
