@@ -6,7 +6,7 @@ from tkcalendar import DateEntry
 from src.classes.search import Search
 
 
-class SearchFlights(tk.Frame):
+class SearchReturnFlights(tk.Frame):
     def __init__(self, parent, controller, show_home, 
                  show_login, show_avail_flights):
         super().__init__(parent)
@@ -19,6 +19,7 @@ class SearchFlights(tk.Frame):
         self.depart_code = tk.StringVar()
         self.dest_code = tk.StringVar()
         self.depart_date = tk.StringVar() 
+        self.return_date = tk.StringVar()
         self.seats_requested = tk.IntVar()
         
         """Header Section"""
@@ -78,18 +79,31 @@ class SearchFlights(tk.Frame):
         )
         self.date_entry.grid(row=2,column=1, padx=10, pady=10, sticky='W')
         
+        self.return_date_label = ttk.Label(
+            self.entry_container,
+            text='Return Date',
+        )
+        self.return_date_label.grid(row=3,column=0, padx=10, pady=10, sticky='W')
+        
+        self.return_date_entry = DateEntry(
+            self.entry_container,
+            selectmode='day',
+            textvariable=self.return_date
+        )
+        self.return_date_entry.grid(row=3,column=1, padx=10, pady=10, sticky='W')
+        
         self.seats_label = ttk.Label(
             self.entry_container,
             text='Seats Requested',
         )
-        self.seats_label.grid(row=3, column=0, padx=10, pady=10, sticky='W')
+        self.seats_label.grid(row=4, column=0, padx=10, pady=10, sticky='W')
         
         self.seats_entry =ttk.Entry(
             self.entry_container,
             textvariable=self.seats_requested,
             font=('Calibri', 16),
         )
-        self.seats_entry.grid(row=3, column=1, padx=10, pady=10, sticky='W')
+        self.seats_entry.grid(row=4, column=1, padx=10, pady=10, sticky='W')
         
         """Buttons Section"""
                 
@@ -100,7 +114,7 @@ class SearchFlights(tk.Frame):
             width=15,
             style = 'CustomButton.TButton',
         )
-        self.search_button.grid(row=4, column=0, padx=10, pady=20, sticky='W')
+        self.search_button.grid(row=5, column=0, padx=10, pady=20, sticky='W')
         self.search_button.bind('<Return>', self.search_handler)
         
         self.home_button = ttk.Button(
@@ -110,7 +124,7 @@ class SearchFlights(tk.Frame):
             width=15,
             style = 'CustomButton.TButton',
         )
-        self.home_button.grid(row=4, column=1, padx=10, pady=20, sticky='E')
+        self.home_button.grid(row=5, column=1, padx=10, pady=20, sticky='E')
         self.home_button.bind('<Return>', self.home_handler)
         
         self.login_button = ttk.Button(
@@ -120,7 +134,7 @@ class SearchFlights(tk.Frame):
             width=15,
             style = 'CustomButton.TButton',
         )
-        self.login_button.grid(row=5, column=0, padx=10, pady=10, sticky='W')
+        self.login_button.grid(row=6, column=0, padx=10, pady=10, sticky='W')
         self.login_button.bind('<Return>', self.login_handler)
         
         self.clear_button = ttk.Button(
@@ -130,7 +144,7 @@ class SearchFlights(tk.Frame):
             width=15,
             style = 'CustomButton.TButton',
         )
-        self.clear_button.grid(row=5, column=1, padx=10, pady=10, sticky='E')
+        self.clear_button.grid(row=6, column=1, padx=10, pady=10, sticky='E')
         self.clear_button.bind('<Return>', self.clear_handler)
         self.clear_button.bind('<Tab>', self.tab_order_rev)
         
@@ -156,9 +170,9 @@ class SearchFlights(tk.Frame):
 
 
     def tab_order_rev(self, event):
-        widgets =[self.clear_button, self.login_button, self.search_button, 
-                  self.home_button, self.seats_entry, self.date_entry,
-                  self.dest_entry, self.depart_entry
+        widgets =[self.clear_button, self.login_button, self.home_button, 
+                  self.search_button, self.seats_entry, self.return_date_entry, 
+                  self.date_entry, self.dest_entry, self.depart_entry
                   ]
         for w in widgets:
             w.lift()
@@ -166,8 +180,8 @@ class SearchFlights(tk.Frame):
     
     def tab_order(self, event):
         widgets = [self.depart_entry, self.dest_entry, self.date_entry, 
-                   self.seats_entry, self.search_button, self.home_button, 
-                   self.login_button, self.clear_button
+                   self.return_date_entry, self.seats_entry, self.search_button, 
+                   self.home_button, self.login_button, self.clear_button
                    ]
         for w in widgets:
             w.lift()
@@ -182,11 +196,15 @@ class SearchFlights(tk.Frame):
                 (self.dest_entry.get()).upper(),
                 self.depart_date.get(),  
                 self.seats_requested.get(),
-                self.controller.search.return_date
+                self.return_date.get()
             )                   
-                
-            self.controller.flight.avail_flights = self.controller.search.get_flights_db()     
-            if self.controller.flight.avail_flights == False:
+            #set flights lists for outbound and return flights  
+            self.controller.flight.avail_flights = self.controller.search.get_flights_db()
+            self.controller.flight.return_flights = self.controller.search.get_return_flights_db()     
+            #check to see if any flights are available
+            if (self.controller.flight.avail_flights == False
+                or self.controller.flight.return_flights == False
+            ):
                 messagebox.showerror('No Flights', 'No flights were found with your requirements.')
             else:
                 self.show_avail_flights()
@@ -206,5 +224,6 @@ class SearchFlights(tk.Frame):
         self.depart_entry.delete(0, tk.END)
         self.dest_entry.delete(0, tk.END)
         self.date_entry.delete(0, tk.END)
+        self.return_date_entry.delete(0, tk.END)
         self.seats_entry.delete(0, tk.END)
         

@@ -4,7 +4,7 @@ from tkinter import ttk
 
 class Home(tk.Frame):
     def __init__(self, parent, controller, show_register, 
-                 show_login, show_search, show_res, show_update):
+                 show_login, show_search, show_res, show_update, show_rt_search):
         super().__init__(parent)
         
         self.controller = controller
@@ -13,6 +13,7 @@ class Home(tk.Frame):
         self.show_search = show_search
         self.show_login = show_login
         self.show_update = show_update
+        self.show_rt_search = show_rt_search
         
         """Header Section"""
         header_container = ttk.Frame(
@@ -55,16 +56,6 @@ class Home(tk.Frame):
         self.login_button.bind('<Return>', self.login_handler)
         self.login_button.bind('<Tab>', self.tab_order)
         
-        self.search_button = ttk.Button(
-            button_container,
-            text='Search Flights',
-            width=15,
-            command=show_search,
-            style = 'CustomButton.TButton',
-        )
-        self.search_button.grid(row=0, column=1, sticky='E', padx=10, pady=10)
-        self.search_button.bind('<Return>', self.search_handler)
-        
         self.register_button = ttk.Button(
             button_container,
             text='Register',
@@ -72,8 +63,28 @@ class Home(tk.Frame):
             command=show_register,
             style = 'CustomButton.TButton',
         )
-        self.register_button.grid(row=1, column=0, sticky='W', padx=10, pady=10)
+        self.register_button.grid(row=0, column=1, sticky='W', padx=10, pady=10)
         self.register_button.bind('<Return>', self.register_handler)
+        
+        self.search_button = ttk.Button(
+            button_container,
+            text='One Way Search',
+            width=15,
+            command=show_search,
+            style = 'CustomButton.TButton',
+        )
+        self.search_button.grid(row=1, column=0, sticky='E', padx=10, pady=10)
+        self.search_button.bind('<Return>', self.search_handler)
+        
+        self.search_rt_button = ttk.Button(
+            button_container,
+            text='Round Trip Search',
+            width=15,
+            command=show_rt_search,
+            style = 'CustomButton.TButton',
+        )
+        self.search_rt_button.grid(row=1, column=1, sticky='E', padx=10, pady=10)
+        self.search_rt_button.bind('<Return>', self.search_rt_handler)
         
         self.res_button = ttk.Button(
             button_container,
@@ -82,7 +93,7 @@ class Home(tk.Frame):
             command=self.show_res,
             style = 'CustomButton.TButton',
         )
-        self.res_button.grid(row=1, column=1, sticky='E', padx=10, pady=10)
+        self.res_button.grid(row=2, column=0, sticky='E', padx=10, pady=10)
         self.res_button.bind('<Return>', self.res_handler)
         
         self.update_button = ttk.Button(
@@ -92,9 +103,9 @@ class Home(tk.Frame):
             command=self.show_update,
             style = 'CustomButton.TButton',
         )
-        self.update_button.grid(row=2, column=0, sticky='W', padx=10, pady=10)
+        self.update_button.grid(row=2, column=1, sticky='W', padx=10, pady=10)
         self.update_button.bind('<Return>', self.update_handler)
-        self.update_button.bind('<Return>', self.update_handler)
+        self.update_button.bind('<Tab>', self.tab_order_rev)
 
         
     def postupdate(self):
@@ -109,12 +120,16 @@ class Home(tk.Frame):
         self.show_search()
         
         
+    def search_rt_handler(self, event):
+        self.show_rt_search()
+        
+        
     def register_handler(self, event):
         self.show_register()
         
         
     def res_handler(self, event):
-        self.reserved_flights()
+        self.show_res()
         
         
     def update_handler(self, event):
@@ -123,16 +138,16 @@ class Home(tk.Frame):
         
     
     def tab_order(self, event):
-        widgets = [self.login_button, self.search_button, self.register_button, 
-                   self.res_button, self.update_button
+        widgets = [self.login_button, self.register_button, self.search_button, 
+                   self.search_rt_button, self.res_button, self.update_button
                    ]
         for w in widgets:
             w.lift()
     
         
     def tab_order_rev(self, event):
-        widgets = [self.update_button, self.res_button, 
-                   self.register_button, self.search_button, self.login_button
+        widgets = [self.update_button, self.res_button, self.search_rt_button,
+                   self.search_button, self.register_button,  self.login_button
                    ]
         for w in widgets:
             w.lift()

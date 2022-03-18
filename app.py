@@ -5,9 +5,12 @@ from src.frames.home import Home
 from src.frames.register import Register
 from src.frames.login import Login
 from src.frames.search import SearchFlights
+from src.frames.search_round_trip import SearchReturnFlights
 from src.frames.avail_flights import AvailFlights
+from src.frames.avail_flights_return import AvailFlightsReturn
 from src.frames.show_res import ShowRes
 from src.frames.update_user import UpdateUser
+
 
 from src.classes.user import User
 from src.classes.search import Search
@@ -98,6 +101,7 @@ class AirlineReservation(tk.Tk):
                           lambda: self.show_frame(SearchFlights),
                           lambda: self.show_frame(ShowRes),
                           lambda: self.show_frame(UpdateUser),
+                          lambda: self.show_frame(SearchReturnFlights),
                         )
         home_frame.grid(row=0, column=0, sticky='NSEW')
         
@@ -119,21 +123,38 @@ class AirlineReservation(tk.Tk):
                               lambda: self.show_frame(Home), 
                               lambda: self.show_frame(Login),
                               lambda: self.show_frame(AvailFlights),
-                              lambda: self.show_frame(SearchFlights),
                             )
         search_frame.grid(row=0, column=0, sticky='NSEW')
+        
+        search_return_frame = SearchReturnFlights(container, self, 
+                              lambda: self.show_frame(Home), 
+                              lambda: self.show_frame(Login),
+                              lambda: self.show_frame(AvailFlights),
+                            )
+        search_return_frame.grid(row=0, column=0, sticky='NSEW')
         
         avail_flights_frame = AvailFlights(container,self,
                                     lambda: self.show_frame(Home),
                                     lambda: self.show_frame(SearchFlights),
                                     lambda: self.show_frame(ShowRes),
+                                    lambda: self.show_frame(SearchReturnFlights),
+                                    lambda: self.show_frame(AvailFlightsReturn)
                                 )
         avail_flights_frame.grid(row=0, column=0, sticky='NSEW')
+        
+        avail_flights_return_frame = AvailFlightsReturn(container,self,
+                                    lambda: self.show_frame(Home),
+                                    lambda: self.show_frame(SearchFlights),
+                                    lambda: self.show_frame(ShowRes),
+                                    lambda: self.show_frame(SearchReturnFlights),
+                                )
+        avail_flights_return_frame.grid(row=0, column=0, sticky='NSEW')
         
         show_res_frame = ShowRes(container,self,
                                  lambda: self.show_frame(Home),
                                  lambda: self.show_frame(SearchFlights),
-                                 lambda: self.show_frame(Login), 
+                                 lambda: self.show_frame(Login),
+                                 lambda: self.show_frame(SearchReturnFlights),
                                  )
         show_res_frame.grid(row=0, column=0, sticky='NSEW')
         
@@ -150,6 +171,8 @@ class AirlineReservation(tk.Tk):
         self.frames[AvailFlights] = avail_flights_frame
         self.frames[ShowRes] = show_res_frame
         self.frames[UpdateUser] = update_user_frame
+        self.frames[SearchReturnFlights] = search_return_frame
+        self.frames[AvailFlightsReturn] = avail_flights_return_frame
         
         self.show_frame(Home)
 
@@ -174,7 +197,15 @@ class AirlineReservation(tk.Tk):
             self.geometry('440x450')
             frame.tkraise()
             frame.postupdate()
+        elif frame == self.frames[SearchReturnFlights]:
+            self.geometry('440x500')
+            frame.tkraise()
+            frame.postupdate()
         elif frame == self.frames[AvailFlights]:
+            self.geometry('1020x700')
+            frame.tkraise()
+            frame.postupdate()
+        elif frame == self.frames[AvailFlightsReturn]:
             self.geometry('1020x700')
             frame.tkraise()
             frame.postupdate()
