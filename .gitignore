@@ -1,5 +1,4 @@
 # ignore sandbox foloder
-sandbox/
 .env
 
 # Byte-compiled / optimized / DLL files

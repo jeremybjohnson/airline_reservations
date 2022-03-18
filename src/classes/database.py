@@ -15,8 +15,8 @@ class Database:
         try:
             load_dotenv()
             conn = psycopg2.connect(
-                user=os.environ.get('USER'), #jeremyjohnson-mini
-                password=os.environ.get('PASSWORD'), #!Bigdog24
+                user=os.environ.get('USER'),
+                password=os.environ.get('PASSWORD'),
                 database="air_res_prod_db",
                 port="5432",
             )
