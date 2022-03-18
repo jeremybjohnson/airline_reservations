@@ -11,6 +11,7 @@ tkcalendar = "*"
 python-dateutil = "*"
 ttkthemes = "*"
 pytest-cov = "*"
+python-dotenv = "*"
 
 [dev-packages]
 

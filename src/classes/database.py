@@ -1,5 +1,7 @@
 import psycopg2
 from psycopg2 import Error
+from dotenv import load_dotenv
+import os
 
 
 class Database:    
@@ -11,9 +13,10 @@ class Database:
         """method opens db connection and executes SQL statement.
             Update variable determines SQL statement type"""
         try:
+            load_dotenv()
             conn = psycopg2.connect(
-                user="jeremyjohnson-mini",
-                password="!Bigdog24",
+                user=os.environ.get('USER'), #jeremyjohnson-mini
+                password=os.environ.get('PASSWORD'), #!Bigdog24
                 database="air_res_prod_db",
                 port="5432",
             )
