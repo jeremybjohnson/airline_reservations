@@ -14,11 +14,12 @@ class Flight(Database):
         self.cost = 0
         self.avail_seats = 0
         self.avail_flights = []
+        self.return_flights = []
 
 
     def set_flight(self, flight_id, airline, flight_num, depart_code, dest_code,
-                   depart_date, depart_time, cost, avail_seats, avail_flights
-                   ):
+                   depart_date, depart_time, cost, avail_seats, avail_flight, avail_flights, return_flights):
+                   
         self.flight_id = flight_id
         self.flight_num = flight_num
         self.airline = airline
@@ -30,3 +31,4 @@ class Flight(Database):
         self.cost = cost
         self.avail_seats = avail_seats
         self.avail_flights = avail_flights
+        self.return_flights = return_flights
