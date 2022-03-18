@@ -5,8 +5,8 @@ from tkinter import messagebox
 from src.classes.reservation import Reservation
 
 
-class AvailFlights(tk.Frame):
-    def __init__(self, parent, controller, show_home, show_search, show_res, show_rt_search, return_flights):
+class AvailFlightsReturn(tk.Frame):
+    def __init__(self, parent, controller, show_home, show_search, show_res, show_rt_search):
         super().__init__(parent)
         
         self.controller = controller
@@ -14,7 +14,6 @@ class AvailFlights(tk.Frame):
         self.show_search = show_search
         self.show_res = show_res
         self.show_rt_search = show_rt_search
-        self.return_flights = return_flights
         
         """Header Section"""
         header_container = ttk.Frame(self, height=50)
@@ -23,7 +22,7 @@ class AvailFlights(tk.Frame):
         
         header_label = ttk.Label(
             header_container,
-            text='Available Flights',
+            text='Available Flights - Return Flight',
             style='Header.TLabel'
         )
         header_label.place(relx=0.5, rely=0.5, anchor='center')
@@ -150,7 +149,7 @@ class AvailFlights(tk.Frame):
         self.tree.heading('cost', text='\nCost', anchor=tk.CENTER )
         self.tree.heading('avail_seats', text='Available\n    Seats', anchor=tk.CENTER)
         
-        flights = self.controller.flight.avail_flights
+        flights = self.controller.flight.return_flights
         
         # tags for alternating row colors
         self.tree.tag_configure('oddrow', background='lightsteelblue1')
@@ -184,13 +183,6 @@ class AvailFlights(tk.Frame):
         self.controller.flight.return_flights = []
         self.build_tree()
         self.show_search()
-        
-        
-    def search_rt(self):
-        self.controller.flight.avail_flights = []
-        self.controller.flight.return_flights = []
-        self.build_tree()
-        self.show_rt_search()
 
     
     def reserve_flight(self):
@@ -201,16 +193,10 @@ class AvailFlights(tk.Frame):
             if self.controller.res.set_res(flight_id, username, seats_requested) == False:
                 messagebox.showerror(f'Database Error', 'You already have a reservation for that flight. \nYou have to cancel your reservation and book a new one')
             else:
-                if self.controller.search.return_date == '':
-                    self.controller.res.set_res(flight_id, username, seats_requested)
-                    self.controller.res.set_res_db()
-                    messagebox.showinfo("Reservation", 'Your reservation has been created')
-                    self.show_res()
-                else:
-                    self.controller.res.set_res(flight_id, username, seats_requested)
-                    self.controller.res.set_res_db()
-                    messagebox.showinfo("Reservation", 'Your reservation has been created')
-                    self.return_flights()
+                self.controller.res.set_res(flight_id, username, seats_requested)
+                self.controller.res.set_res_db()
+                messagebox.showinfo("Reservation", 'Your reservation has been created')
+                self.show_res()
         except IndexError:
             messagebox.showerror(f'No Flight Selected', 'You must select a flight')
                 
