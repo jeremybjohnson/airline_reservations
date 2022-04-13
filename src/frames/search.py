@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkcalendar import DateEntry
+import datetime
 
 from src.classes.search import Search
 
@@ -184,12 +185,14 @@ class SearchFlights(tk.Frame):
                 self.seats_requested.get(),
                 self.controller.search.return_date
             )                   
-                
-            self.controller.flight.avail_flights = self.controller.search.get_flights_db()     
-            if self.controller.flight.avail_flights == False:
-                messagebox.showerror('No Flights', 'No flights were found with your requirements.')
+            if (datetime.datetime.strptime(self.depart_date.get(), '%m/%d/%Y').date() < datetime.date.today()):
+                messagebox.showerror('Invalid Date', 'Invalid Date')
             else:
-                self.show_avail_flights()
+                self.controller.flight.avail_flights = self.controller.search.get_flights_db()     
+                if self.controller.flight.avail_flights == False:
+                    messagebox.showerror('No Flights', 'No flights were found with your requirements.')
+                else:
+                    self.show_avail_flights()
         else:
             messagebox.showerror('Not Logged In', 'User is not logged in.')
             self.show_login()

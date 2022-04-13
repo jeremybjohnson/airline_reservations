@@ -35,7 +35,7 @@ class Search(Database):
             self.depart_code,
             self.dest_code,
             self.depart_date,
-            self.seats_requested,
+            self.seats_requested
         )
         return_flights = self.execute_sql(sql)
         if return_flights == []:

@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
 from tkcalendar import DateEntry
+import datetime
 
 from src.classes.search import Search
 
@@ -197,17 +198,25 @@ class SearchReturnFlights(tk.Frame):
                 self.depart_date.get(),  
                 self.seats_requested.get(),
                 self.return_date.get()
-            )                   
-            #set flights lists for outbound and return flights  
-            self.controller.flight.avail_flights = self.controller.search.get_flights_db()
-            self.controller.flight.return_flights = self.controller.search.get_return_flights_db()     
-            #check to see if any flights are available
-            if (self.controller.flight.avail_flights == False
-                or self.controller.flight.return_flights == False
-            ):
-                messagebox.showerror('No Flights', 'No flights were found with your requirements.')
-            else:
-                self.show_avail_flights()
+            )
+            if (datetime.datetime.strptime(self.depart_date.get(), '%m/%d/%Y').date() < 
+                datetime.date.today() or 
+                datetime.datetime.strptime(self.return_date.get(), '%m/%d/%Y').date() < 
+                datetime.date.today() or
+                datetime.datetime.strptime(self.return_date.get(), '%m/%d/%Y').date() < 
+                datetime.datetime.strptime(self.depart_date.get(), '%m/%d/%Y').date()):
+                    messagebox.showerror('Invalid Date', 'Invalid Date or Dates')
+            else:                   
+                #set flights lists for outbound and return flights  
+                self.controller.flight.avail_flights = self.controller.search.get_flights_db()
+                self.controller.flight.return_flights = self.controller.search.get_return_flights_db()     
+                #check to see if any flights are available
+                if (self.controller.flight.avail_flights == False
+                    or self.controller.flight.return_flights == False
+                ):
+                    messagebox.showerror('No Flights', 'No flights were found with your requirements.')
+                else:
+                    self.show_avail_flights()
         else:
             messagebox.showerror('Not Logged In', 'User is not logged in.')
             self.show_login()
