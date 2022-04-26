@@ -138,6 +138,7 @@ class UpdateUser(tk.Frame):
     
     def postupdate(self):
         self.password_entry.focus()
+        self.clear_text()
     
     
     def update_handler(self, event):

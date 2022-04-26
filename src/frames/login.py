@@ -109,6 +109,7 @@ class Login(tk.Frame):
         
     def postupdate(self):
         self.username_entry.focus()
+        self.clear_text()
 
     
     def login_handler(self, event):

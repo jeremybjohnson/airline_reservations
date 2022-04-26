@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from tkinter import messagebox
-from tkcalendar import DateEntry
+from tkcalendar import Calendar, DateEntry
 import datetime
 
 from src.classes.search import Search
@@ -75,7 +75,8 @@ class SearchFlights(tk.Frame):
         self.date_entry=DateEntry(
             self.entry_container,
             selectmode='day',
-            textvariable=self.depart_date
+            textvariable=self.depart_date,
+            date_pattern='mm/dd/yyyy',
         )
         self.date_entry.grid(row=2,column=1, padx=10, pady=10, sticky='W')
         

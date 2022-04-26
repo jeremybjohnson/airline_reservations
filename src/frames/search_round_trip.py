@@ -76,7 +76,8 @@ class SearchReturnFlights(tk.Frame):
         self.date_entry=DateEntry(
             self.entry_container,
             selectmode='day',
-            textvariable=self.depart_date
+            textvariable=self.depart_date,
+            date_pattern='mm/dd/yyyy',
         )
         self.date_entry.grid(row=2,column=1, padx=10, pady=10, sticky='W')
         
@@ -89,7 +90,8 @@ class SearchReturnFlights(tk.Frame):
         self.return_date_entry = DateEntry(
             self.entry_container,
             selectmode='day',
-            textvariable=self.return_date
+            textvariable=self.return_date,
+            date_pattern='mm/dd/yyyy',
         )
         self.return_date_entry.grid(row=3,column=1, padx=10, pady=10, sticky='W')
         

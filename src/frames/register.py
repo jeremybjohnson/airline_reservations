@@ -151,6 +151,7 @@ class Register(tk.Frame):
     
     def postupdate(self):
         self.username_entry.focus()
+        self.clear_text()
     
     
     def register_handler(self, event):
