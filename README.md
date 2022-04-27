@@ -1,4 +1,6 @@
 # airline_reservations
+This application requires a database to run. SQL code is provided to propogate the database.
+
 Program to allow people to search and reserve airline reservations.
 
 Users can register and login to search for and reserve flights. User information is saved to the database.
